@@ -1,0 +1,125 @@
+openapi: 3.0.0
+info:
+  title: 'Projects Documentation'
+  description: 'L5 Swagger OpenApi description'
+  contact:
+    email: admin@admin.com
+  version: 1.0.0
+servers:
+  -
+    url: localhost
+    description: 'Projects API Server'
+paths:
+  /projects:
+    get:
+      tags:
+        - Projects
+      summary: 'Get list of projects'
+      description: 'Returns list of projects'
+      operationId: getProjectsList
+      responses:
+        200:
+          description: 'Successful operation'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectResource'
+    post:
+      tags:
+        - Projects
+      summary: 'Store a new project'
+      description: 'Returns created project data'
+      operationId: storeProject
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreProjectRequest'
+      responses:
+        201:
+          description: 'Successful operation'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectResource'
+components:
+  schemas:
+    Project:
+      title: Project
+      description: 'Project model'
+      properties:
+        id:
+          title: ID
+          description: ID
+          type: integer
+          format: int64
+          example: 1
+        name:
+          title: Name
+          description: 'Name of the new project'
+          type: string
+          example: 'A nice project'
+        description:
+          title: Description
+          description: 'Description of the new project'
+          type: string
+          example: 'This is the new project''s description'
+        is_completed:
+          title: 'Is completed'
+          description: 'Status of the project'
+          type: boolean
+          example: '0'
+        created_at:
+          title: 'Created at'
+          description: 'Created at'
+          type: string
+          format: datetime
+          example: '2020-01-27 17:50:45'
+        updated_at:
+          title: 'Updated at'
+          description: 'Updated at'
+          type: string
+          format: datetime
+          example: '2020-01-27 17:50:45'
+      type: object
+      xml:
+        name: Project
+    ProjectResource:
+      title: ProjectResource
+      description: 'Project resource'
+      properties:
+        data:
+          title: data
+          description: 'Data wrapper'
+          type: array
+          items:
+            $ref: '#/components/schemas/Project'
+      type: object
+      xml:
+        name: ProjectResource
+    StoreProjectRequest:
+      title: StoreProjectRequest
+      description: 'Store Project request body data'
+      required:
+        - name
+        - description
+      properties:
+        name:
+          title: name
+          description: 'Name of the new project'
+          type: string
+          example: 'A nice project'
+        description:
+          title: description
+          description: 'Description of the new project'
+          type: string
+          example: 'This is the new project''s description'
+      type: object
+tags:
+  -
+    name: Projects
+    description: 'API Endpoints for Projects'
+  -
+    name: Tasks
+    description: 'API Endpoints for Tasks'
