@@ -7,7 +7,7 @@ info:
   version: 1.0.0
 servers:
   -
-    url: localhost
+    url: 'http://localhost:8000/api/'
     description: 'Projects API Server'
 paths:
   /projects:
@@ -23,7 +23,32 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProjectResource'
+                properties:
+                  data:
+                    title: data
+                    description: Data-Wrapper
+                    type: array
+                    items:
+                      properties:
+                        id:
+                          $ref: '#components/schemas/Project/properties/id'
+                        name:
+                          $ref: '#components/schemas/Project/properties/name'
+                        description:
+                          $ref: '#components/schemas/Project/properties/description'
+                        is_completed:
+                          $ref: '#components/schemas/Project/properties/is_completed'
+                        created_at:
+                          $ref: '#components/schemas/Project/properties/created_at'
+                        updated_at:
+                          $ref: '#components/schemas/Project/properties/updated_at'
+                        tasks_count:
+                          title: tasks_count
+                          description: 'Number of tasks in the project'
+                          type: integer
+                          example: 1
+                      type: object
+                type: object
     post:
       tags:
         - Projects
@@ -42,7 +67,111 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProjectResource'
+                properties:
+                  data:
+                    title: data
+                    description: Data-Wrapper
+                    properties:
+                      id:
+                        $ref: '#components/schemas/Project/properties/id'
+                      name:
+                        $ref: '#components/schemas/Project/properties/name'
+                      description:
+                        $ref: '#components/schemas/Project/properties/description'
+                      created_at:
+                        $ref: '#components/schemas/Project/properties/created_at'
+                      updated_at:
+                        $ref: '#components/schemas/Project/properties/updated_at'
+                    type: object
+                type: object
+  '/projects/{projectId}':
+    get:
+      tags:
+        - Projects
+      summary: 'Get details of a single project'
+      description: 'Returns the project details and an array of tasks associated with the project'
+      operationId: getOneProject
+      parameters:
+        -
+          name: projectId
+          in: path
+          description: 'Project ID'
+          required: true
+          schema:
+            type: integer
+          example: 1
+      responses:
+        200:
+          description: 'Successful operation'
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    title: data
+                    description: Data-Wrapper
+                    properties:
+                      id:
+                        $ref: '#components/schemas/Project/properties/id'
+                      name:
+                        $ref: '#components/schemas/Project/properties/name'
+                      description:
+                        $ref: '#components/schemas/Project/properties/description'
+                      is_completed:
+                        $ref: '#components/schemas/Project/properties/is_completed'
+                      created_at:
+                        $ref: '#components/schemas/Project/properties/created_at'
+                      updated_at:
+                        $ref: '#components/schemas/Project/properties/updated_at'
+                      tasks:
+                        title: tasks
+                        description: 'array of task object'
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Task'
+                    type: object
+                type: object
+    put:
+      tags:
+        - Projects
+      summary: 'Mark project as complete'
+      description: 'Returns updated project data with is_completed to true'
+      operationId: markProjectAsComplete
+      parameters:
+        -
+          name: projectId
+          in: path
+          description: 'Project ID'
+          required: true
+          schema:
+            type: integer
+          example: 1
+      responses:
+        202:
+          description: 'Successful operation'
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    title: data
+                    description: Data-Wrapper
+                    properties:
+                      id:
+                        $ref: '#components/schemas/Project/properties/id'
+                      name:
+                        $ref: '#components/schemas/Project/properties/name'
+                      description:
+                        $ref: '#components/schemas/Project/properties/description'
+                      is_completed:
+                        example: 1
+                        $ref: '#components/schemas/Project/properties/is_completed'
+                      created_at:
+                        $ref: '#components/schemas/Project/properties/created_at'
+                      updated_at:
+                        $ref: '#components/schemas/Project/properties/updated_at'
+                    type: object
+                type: object
 components:
   schemas:
     Project:
@@ -50,56 +179,81 @@ components:
       description: 'Project model'
       properties:
         id:
-          title: ID
-          description: ID
+          title: id
+          description: 'Project ID'
           type: integer
-          format: int64
           example: 1
         name:
-          title: Name
-          description: 'Name of the new project'
+          title: name
+          description: 'Name of the project'
           type: string
           example: 'A nice project'
         description:
-          title: Description
-          description: 'Description of the new project'
+          title: description
+          description: 'Description of the project'
           type: string
-          example: 'This is the new project''s description'
+          example: 'This is the project''s description'
         is_completed:
-          title: 'Is completed'
+          title: is_completed
           description: 'Status of the project'
           type: boolean
-          example: '0'
+          example: false
         created_at:
-          title: 'Created at'
-          description: 'Created at'
+          title: created_at
+          description: 'DateTime the project is created'
           type: string
-          format: datetime
+          format: date-time
           example: '2020-01-27 17:50:45'
         updated_at:
-          title: 'Updated at'
-          description: 'Updated at'
+          title: updated_at
+          description: 'DateTime the project is last updated'
           type: string
-          format: datetime
+          format: date-time
           example: '2020-01-27 17:50:45'
       type: object
       xml:
         name: Project
-    ProjectResource:
-      title: ProjectResource
-      description: 'Project resource'
+    Task:
+      title: Task
+      description: 'Task model'
       properties:
-        data:
-          title: data
-          description: 'Data wrapper'
-          type: array
-          items:
-            $ref: '#/components/schemas/Project'
+        id:
+          title: id
+          description: 'Task ID'
+          type: integer
+          example: 1
+        title:
+          title: title
+          description: 'Title of the task'
+          type: string
+          example: 'A nice task'
+        project_id:
+          title: project_id
+          description: 'The project ID this task is in'
+          type: integer
+          example: 1
+        is_completed:
+          title: is_completed
+          description: 'Status of the task'
+          type: boolean
+          example: false
+        created_at:
+          title: created_at
+          description: 'DateTime the task is created'
+          type: string
+          format: date-time
+          example: '2020-01-27 17:50:45'
+        updated_at:
+          title: updated_at
+          description: 'DateTime the task is last updated'
+          type: string
+          format: date-time
+          example: '2020-01-27 17:50:45'
       type: object
       xml:
-        name: ProjectResource
+        name: Task
     StoreProjectRequest:
-      title: StoreProjectRequest
+      title: 'Store Project Request'
       description: 'Store Project request body data'
       required:
         - name
@@ -114,8 +268,10 @@ components:
           title: description
           description: 'Description of the new project'
           type: string
-          example: 'This is the new project''s description'
+          example: 'This is the project''s description'
       type: object
+      xml:
+        name: StoreProjectRequest
 tags:
   -
     name: Projects
