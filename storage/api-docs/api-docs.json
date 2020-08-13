@@ -84,7 +84,15 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/StoreProjectRequest"
+                                "properties": {
+                                    "name": {
+                                        "$ref": "#components/schemas/Project/properties/name"
+                                    },
+                                    "description": {
+                                        "$ref": "#components/schemas/Project/properties/description"
+                                    }
+                                },
+                                "type": "object"
                             }
                         }
                     }
@@ -235,7 +243,6 @@
                                                     "$ref": "#components/schemas/Project/properties/description"
                                                 },
                                                 "is_completed": {
-                                                    "example": 1,
                                                     "$ref": "#components/schemas/Project/properties/is_completed"
                                                 },
                                                 "created_at": {
@@ -243,6 +250,131 @@
                                                 },
                                                 "updated_at": {
                                                     "$ref": "#components/schemas/Project/properties/updated_at"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tasks": {
+            "post": {
+                "tags": [
+                    "Tasks"
+                ],
+                "summary": "Store a new task",
+                "description": "Returns created task data",
+                "operationId": "storeTask",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "project_id": {
+                                        "$ref": "#components/schemas/Project/properties/id"
+                                    },
+                                    "title": {
+                                        "$ref": "#components/schemas/Task/properties/title"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "title": "data",
+                                            "description": "Data-Wrapper",
+                                            "properties": {
+                                                "id": {
+                                                    "$ref": "#components/schemas/Task/properties/id"
+                                                },
+                                                "title": {
+                                                    "$ref": "#components/schemas/Task/properties/title"
+                                                },
+                                                "project_id": {
+                                                    "$ref": "#components/schemas/Task/properties/project_id"
+                                                },
+                                                "created_at": {
+                                                    "$ref": "#components/schemas/Task/properties/created_at"
+                                                },
+                                                "updated_at": {
+                                                    "$ref": "#components/schemas/Task/properties/updated_at"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tasks/{taskId}": {
+            "put": {
+                "tags": [
+                    "Tasks"
+                ],
+                "summary": "Mark a task as complete",
+                "description": "Returns updated task data with is_completed to true",
+                "operationId": "markTaskAsComplete",
+                "parameters": [
+                    {
+                        "name": "taskId",
+                        "in": "path",
+                        "description": "Task ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "example": 1
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "title": "data",
+                                            "description": "Data-Wrapper",
+                                            "properties": {
+                                                "id": {
+                                                    "$ref": "#components/schemas/Task/properties/id"
+                                                },
+                                                "title": {
+                                                    "$ref": "#components/schemas/Task/properties/title"
+                                                },
+                                                "project_id": {
+                                                    "$ref": "#components/schemas/Task/properties/project_id"
+                                                },
+                                                "is_completed": {
+                                                    "$ref": "#components/schemas/Task/properties/is_completed"
+                                                },
+                                                "created_at": {
+                                                    "$ref": "#components/schemas/Task/properties/created_at"
+                                                },
+                                                "updated_at": {
+                                                    "$ref": "#components/schemas/Task/properties/updated_at"
                                                 }
                                             },
                                             "type": "object"
@@ -353,32 +485,6 @@
                 "type": "object",
                 "xml": {
                     "name": "Task"
-                }
-            },
-            "StoreProjectRequest": {
-                "title": "Store Project Request",
-                "description": "Store Project request body data",
-                "required": [
-                    "name",
-                    "description"
-                ],
-                "properties": {
-                    "name": {
-                        "title": "name",
-                        "description": "Name of the new project",
-                        "type": "string",
-                        "example": "A nice project"
-                    },
-                    "description": {
-                        "title": "description",
-                        "description": "Description of the new project",
-                        "type": "string",
-                        "example": "This is the project's description"
-                    }
-                },
-                "type": "object",
-                "xml": {
-                    "name": "StoreProjectRequest"
                 }
             }
         }

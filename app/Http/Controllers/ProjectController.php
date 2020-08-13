@@ -67,7 +67,10 @@ class ProjectController extends Controller
      *      description="Returns created project data",
      *      @OA\RequestBody(
      *          required=true,
-     *          @OA\JsonContent(ref="#/components/schemas/StoreProjectRequest")
+     *          @OA\JsonContent(
+     *              @OA\Property(property="name", ref="#components/schemas/Project/properties/name"),
+     *              @OA\Property(property="description", ref="#components/schemas/Project/properties/description"),
+     *          ),
      *      ),
      *      @OA\Response(
      *          response=201,
@@ -185,7 +188,7 @@ class ProjectController extends Controller
      *                  @OA\Property(property="id", ref="#components/schemas/Project/properties/id"),
      *                  @OA\Property(property="name", ref="#components/schemas/Project/properties/name"),
      *                  @OA\Property(property="description", ref="#components/schemas/Project/properties/description"),
-     *                  @OA\Property(property="is_completed", ref="#components/schemas/Project/properties/is_completed",  example=1),
+     *                  @OA\Property(property="is_completed", ref="#components/schemas/Project/properties/is_completed"),
      *                  @OA\Property(property="created_at", ref="#components/schemas/Project/properties/created_at"),
      *                  @OA\Property(property="updated_at", ref="#components/schemas/Project/properties/updated_at"),
      *              )
