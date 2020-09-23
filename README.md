@@ -8,3 +8,4 @@ Tutorial from [this](https://blog.pusher.com/react-laravel-application/) site.
 - Use [Laravel Gates](https://laravel.com/docs/master/authorization#gates) to restrict access
 - Use [API Resources](https://laravel.com/docs/master/eloquent-resources) to return response data
 - Use [Form Request](https://laravel.com/docs/master/validation#form-request-validation) classes to validate the input data
+- Use [`laravel-websockets`](https://beyondco.de/docs/laravel-websockets/getting-started/introduction) package for [Laravel Broadcast](https://laravel.com/docs/master/broadcasting) feature.
